@@ -5,5 +5,11 @@ description = "This is the training code for an LLM to use a calculator."
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
-    "verifiers @ git+https://github.com/willccbb/verifiers.git@d7e1c2e7a40319a11dea958f7f030d3c7e29bd8f"
+    "anthropic>=0.49.0",
+    "python-dotenv>=1.1.0",
+    "trl>=0.16.0",
+    "verifiers",
 ]
+
+[tool.uv.sources]
+verifiers = { path = "../verifiers", editable = true }
