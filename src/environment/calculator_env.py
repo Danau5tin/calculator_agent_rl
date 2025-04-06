@@ -1,6 +1,7 @@
-import json
 import re
 from typing import Any, Dict, List, Optional, Tuple
+
+import yaml
 from rewards.calculator_reward_func import judge_tool_use, verify_correctness
 from verifiers import RewardFunc
 from verifiers.envs.multiturn_env import MultiTurnEnv
@@ -34,7 +35,9 @@ class CalculatorEnv(MultiTurnEnv):
         if action_id == "calculator":
 
             try:
-                expression = Expression.from_dict(json.loads(action_content))
+                yaml_content = _extract_yaml_from_markdown(action_content)
+                parsed_yaml = yaml.safe_load(yaml_content)
+                expression = Expression.from_dict(parsed_yaml)
             except Exception as e:
                 self.logger.error(f"Failed to parse calculator expression: {e}")
                 return self._build_env_resp_dict("Error: Unable to parse yaml expression inside <calculator> tag.")
@@ -63,3 +66,14 @@ class CalculatorEnv(MultiTurnEnv):
             self.logger.debug(f"All tags found: {[match[0] for match in matches]}")
         
         return matches[0]
+    
+def _extract_yaml_from_markdown(content: str) -> str:
+    # Pattern to match code blocks with optional yaml specification
+    # This matches: ```yaml ... ``` or ``` ... ``` or just raw content
+    pattern = r'```(?:yaml)?\s*([\s\S]*?)\s*```'
+    
+    match = re.search(pattern, content)
+    if match:
+        return match.group(1).strip()
+    
+    return content
