@@ -1,0 +1,9 @@
+[project]
+name = "calculator-agent-rl"
+version = "0.1.0"
+description = "This is the training code for an LLM to use a calculator."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "verifiers @ git+https://github.com/willccbb/verifiers.git@d7e1c2e7a40319a11dea958f7f030d3c7e29bd8f"
+]

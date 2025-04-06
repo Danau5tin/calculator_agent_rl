@@ -1,0 +1,29 @@
+{
+    "name": "Calculator Agent RL Dev Container",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "args": {
+            "USERNAME": "vscode"
+         }
+    },
+
+    "workspaceFolder": "/workspaces/calculator-agent-rl",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/calculator-agent-rl,type=bind,consistency=cached",
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.pythonPath": "/opt/venv/bin/python",
+                "python.defaultInterpreterPath": "/opt/venv/bin/python",
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+            ]
+        }
+    },
+
+    "postAttachCommand": "uv venv && uv sync",
+    "remoteUser": "vscode"
+}
