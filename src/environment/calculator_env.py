@@ -39,7 +39,7 @@ class CalculatorEnv(MultiTurnEnv):
                 parsed_yaml = yaml.safe_load(yaml_content)
                 expression = Expression.from_dict(parsed_yaml)
             except Exception as e:
-                self.logger.error(f"Failed to parse calculator expression: {e}")
+                self.logger.debug(f"Failed to parse calculator expression: {e}")
                 return self._build_env_resp_dict("Error: Unable to parse yaml expression inside <calculator> tag.")
             
             try:
@@ -47,7 +47,7 @@ class CalculatorEnv(MultiTurnEnv):
                 result_str = f"<output>{result}</output>"
                 return self._build_env_resp_dict(result_str)
             except Exception as e:
-                self.logger.error(f"Failed to calculate expression: {e}")
+                self.logger.debug(f"Failed to calculate expression: {e}")
                 return self._build_env_resp_dict(f"Error: Unable to calculate the expression. Details: {str(e)[0:100]}")
             
         return self._build_env_resp_dict("Error: No <calculator> tag found in the response.")
