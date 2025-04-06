@@ -20,4 +20,4 @@ Use the devcontainer and Dockerfile for development. If using VSCode this should
 4. Run vLLM server (Example for a x2 GPUs):
 `CUDA_VISIBLE_DEVICES=0,1 python verifiers/inference/vllm_serve.py --model "Qwen/Qwen2.5-7B-Instruct" --tensor_parallel_size 2 --max_model_len 8192  --gpu_memory_utilization 0.9 --enable_prefix_caching True`
 5. Run train.py using accelerate (Example on x2 GPUs):
-`CUDA_VISIBLE_DEVICES=2,3 accelerate launch --num-processes 2 --config-file configs/zero3.yaml src/train.py`
+`CUDA_VISIBLE_DEVICES=2,3 accelerate launch --num-processes 2 --config-file ../verifiers/configs/zero3.yaml src/train.py`
