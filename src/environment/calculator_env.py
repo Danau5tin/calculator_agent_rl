@@ -1,6 +1,7 @@
 import json
 import re
 from typing import Any, Dict, List, Optional, Tuple
+from rewards.calculator_reward_func import judge_tool_use, verify_correctness
 from verifiers import RewardFunc
 from verifiers.envs.multiturn_env import MultiTurnEnv
 
@@ -10,12 +11,10 @@ from environment.tools.calculator import Expression, calculate
 
 class CalculatorEnv(MultiTurnEnv):
     def get_reward_funcs(self, **kwargs: Any) -> List[RewardFunc]:
-        # TODO: Implement the reward functions for the calculator environment
-        raise NotImplementedError
+        return [judge_tool_use, verify_correctness]
 
     def get_reward_weights(self, **kwargs: Any) -> List[float]:
-        # TODO: Implement the reward weights for the calculator environment
-        raise NotImplementedError
+       return [0.80, 0.20]
 
     def is_completed(self, messages: List[Dict[str, str]], **kwargs: Any) -> bool:       
         """Checks if the response is complete. The response is considered complete if it contains a valid action."""       
