@@ -31,9 +31,7 @@ def load_sys_msg(file_path: str) -> str:
 
 def load_csv_dataset(file_path: str, ds_type: Literal["train", "eval"]) -> Dataset:
     """Loads a CSV dataset from the given file path."""
-    train_dataset = load_dataset("csv", data_files=file_path)[ds_type]
-    logger.info(f"Dataset loaded with {len(train_dataset['question'])} prompts")
-    return train_dataset
+    return load_dataset("csv", data_files=file_path)[ds_type]
 
 train_dset = load_csv_dataset(os.getenv("TRAIN_DSET_PATH"), ds_type="train")
 system_msg = load_sys_msg(os.getenv("SYS_MSG_PATH"))
@@ -60,8 +58,8 @@ training_args=GRPOConfig(
     beta=0.002,
     max_prompt_length=1024,
     max_completion_length=500,
-    per_device_train_batch_size=12,
-    num_generations=8,
+    per_device_train_batch_size=NUM_SAMPLES,
+    num_generations=NUM_SAMPLES,
     gradient_accumulation_steps=1,
     gradient_checkpointing=True,
     save_strategy="steps",
@@ -85,7 +83,7 @@ trainer = GRPOEnvTrainer(
     reward_funcs=calc_env.get_reward_funcs(),
     env=calc_env,
     args=training_args,
-    train_dataset=train_dset,
+    train_dataset=calc_env.dataset, # This is required because the prompt is implicitly formatted within MultiTurnEnv, so we need to use that one
 )
 
 trainer.train()
