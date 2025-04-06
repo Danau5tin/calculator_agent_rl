@@ -15,7 +15,7 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
-MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
+MODEL_NAME = os.getenv("MODEL_NAME")
 NUM_SAMPLES = 8
 
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M")
