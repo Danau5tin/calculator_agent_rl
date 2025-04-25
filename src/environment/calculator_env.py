@@ -62,8 +62,7 @@ class CalculatorEnv(MultiTurnEnv):
             return None, None
         
         if len(matches) > 1:
-            self.logger.warning("Multiple tags found in a single response. Using only the first tag. Consider using stop strings to prevent this.")
-            self.logger.debug(f"All tags found: {[match[0] for match in matches]}")
+            self.logger.debug(f"Multiple tags. All tags found: {[match[0] for match in matches]}")
         
         return matches[0]
     
