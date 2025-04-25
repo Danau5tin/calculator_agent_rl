@@ -65,6 +65,7 @@ training_args=GRPOConfig(
     save_strategy="steps",
     save_steps=100,
     save_only_model=True,
+    save_total_limit=1,
     use_vllm=True,
     vllm_server_host="0.0.0.0",
     vllm_server_port=8000,
