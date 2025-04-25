@@ -23,7 +23,8 @@ You should evaluate the assistant's decision to use the calculator, its translat
 - Correctly identify when a calculation is needed
 - Properly translate the user's question into the correct sequence and nesting of mathematical operations (respecting order of operations). **This includes using a simple, non-nested structure for single-operation problems.**
 - Generate the correct YAML syntax within `<calculator>...</calculator>` tags, using nesting *only when necessary* for multi-step calculations.
-- Present the result clearly, ensuring the final number matches the tool's output for the intended calculation.
+- **Crucially:** When the assistant decides to use the calculator, its response turn *must only* contain the `<calculator>...</calculator>` block. No other text, placeholders (like `<output>...`), or tags should be included in that specific turn.
+- Present the result clearly in the *subsequent* turn, after receiving the calculator output, ensuring the final number matches the tool's output for the intended calculation.
 
 ### Calculator syntax assessment:
 - The assistant must use proper YAML format within `<calculator>...</calculator>` tags.
@@ -33,7 +34,7 @@ You should evaluate the assistant's decision to use the calculator, its translat
 - Operands can be numbers (int/float) or nested expression objects (which are YAML mappings containing `operation` and `operands` keys).
 - Nested expressions must recursively follow the same structure, properly indented according to YAML rules.
 - The assistant must output the *entire* tool call within a single `<calculator>...</calculator>` block.
-- **Crucially:** The assistant should generate *one* tool call per turn. Nesting should be used *if and only if* the problem requires multiple steps or specific order of operations. It should *not* attempt multiple separate calls in one turn or use placeholders like "result of previous calculation".
+- The assistant should generate *one* tool call per turn. Nesting should be used *if and only if* the problem requires multiple steps or specific order of operations. It should *not* attempt multiple separate calls in one turn or use placeholders like "result of previous calculation".
 - Example YAML for `5 * 2828` (Simple):
   ```yaml
   <calculator>
@@ -60,7 +61,7 @@ You should evaluate the assistant's decision to use the calculator, its translat
 If the model gave an apparently correct tool call syntax within the `<calculator>` tags, but there was no output and no error, this means the tool call was not able to be parsed (likely due to incorrect YAML formatting like indentation or structure) and therefore it was invalid syntax.
 
 ### Assistant's final answer format:
-- *The final number* in the assistant's response should accurately reflect the result returned by the calculator tool for the *intended* calculation.
+- *The final number* in the assistant's response *after* the tool call should accurately reflect the result returned by the calculator tool for the *intended* calculation.
 
 ### Granular Reward Structure:
 
@@ -76,17 +77,17 @@ If the model gave an apparently correct tool call syntax within the `<calculator
 - **0.3**: Perfect translation of the problem into the *intended* sequence and nesting (or lack thereof) of mathematical operations.
 
 ## Calculator Syntax & Structure (0.0 - 0.5)
-*(Focuses on generating the correct YAML structure within `<calculator>` tags for the *intended and appropriate* operation/structure from the previous step)*
+*(Focuses on generating the correct YAML structure within `<calculator>` tags for the *intended and appropriate* operation/structure, AND ensuring *only* the calculator call is present in that turn)*
 - **0.0**: Completely invalid format (missing tags, fundamentally broken YAML) OR used unsupported patterns (multiple calls, placeholders).
 - **0.1**: Severe syntax errors (malformed YAML, incorrect indentation, missing required top-level keys like `operation` or `operands`).
-- **0.2**: Valid YAML for a *single* operation, but fails significantly when *appropriate* nesting is required. **OR** *incorrectly nested* a simple operation that didn't require it, even if syntax is technically valid. OR multiple minor errors (e.g., incorrect list format, minor indentation issues) in a simple call.
-- **0.3**: Attempts *appropriate* nesting with the correct basic structure but makes significant syntax errors *within* the nested structure (e.g., incorrect indentation of nested blocks, missing keys in nested objects). OR one major error (e.g., missing `operation` key) in a simple, non-nested call.
-- **0.4**: Mostly correct YAML syntax for the *appropriate* structure (simple or nested), but with one or two minor, easily fixable errors (e.g., slight indentation inconsistency, quoting numbers unnecessarily).
-- **0.5**: Perfect calculator YAML syntax, structure, indentation, and nesting (when required) according to the schema for the *intended and appropriate* operation.
+- **0.2**: Valid YAML for a *single* operation, but fails significantly when *appropriate* nesting is required. **OR** *incorrectly nested* a simple operation that didn't require it, even if syntax is technically valid. OR multiple minor errors (e.g., incorrect list format, minor indentation issues) in a simple call. **OR** included extraneous text/tags alongside an otherwise valid simple call.
+- **0.3**: Attempts *appropriate* nesting with the correct basic structure but makes significant syntax errors *within* the nested structure (e.g., incorrect indentation of nested blocks, missing keys in nested objects). OR one major error (e.g., missing `operation` key) in a simple, non-nested call. **OR** included extraneous text/tags alongside an otherwise valid nested call.
+- **0.4**: Mostly correct YAML syntax for the *appropriate* structure (simple or nested), but with one or two minor, easily fixable errors (e.g., slight indentation inconsistency, quoting numbers unnecessarily). **Crucially, the turn must *only* contain the calculator call.** If extraneous text/tags are present alongside otherwise 0.4-level syntax, reduce score to 0.3 or lower depending on severity.
+- **0.5**: Perfect calculator YAML syntax, structure, indentation, and nesting (when required) according to the schema for the *intended and appropriate* operation. **AND the assistant's turn contains *only* the `<calculator>...</calculator>` block.**
 
 ## Answer Format (0.0 - 0.1)
-- **0.0**: The final number presented doesn't match the tool's output for the *intended* calculation, OR the tool call failed/was inappropriate, preventing a valid result comparison.
-- **0.1**: The final number presented accurately matches the tool's output for the *intended* calculation (assuming a successful, syntactically correct, and logically appropriate tool call).
+- **0.0**: The final number presented in the subsequent turn doesn't match the tool's output for the *intended* calculation, OR the tool call failed/was inappropriate, preventing a valid result comparison, OR no final answer was presented after the tool call.
+- **0.1**: The final number presented in the subsequent turn accurately matches the tool's output for the *intended* calculation (assuming a successful, syntactically correct, and logically appropriate tool call).
 
 # Your output
 You will respond in the below yaml format.
