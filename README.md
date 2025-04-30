@@ -37,7 +37,7 @@ Because despite their reasoning capabilities, LLMs struggle with arithmetic prec
   - [Deployment](#deployment)
   - [When deployed onto a training node](#when-deployed-onto-a-training-node)
   - [Deployment issue fixes](#deployment-issue-fixes)
-
+- [Acknowledgements](#-acknowledgements)
 ---
 
 ## 🧠 High-Level Workflow Summary
@@ -264,3 +264,16 @@ Use the devcontainer and Dockerfile for development. If using VSCode this should
 
 **If Anthropic API key is not loading onto each GPU for judge**
 1. Go to `claude.py` & change `Anthropic()` to `Anthropic(api_key="{api_key}")`
+
+
+## 📚 Acknowledgements
+
+This project makes use of the [Verifiers](https://github.com/willccbb/verifiers) library for reinforcement learning in verifiable environments. If you use this code in your research, please cite:
+
+```
+@article{brown2025verifiers,
+  title={Verifiers: Reinforcement Learning with LLMs in Verifiable Environments},
+  author={Brown, William},
+  year={2025}
+}
+```
