@@ -6,6 +6,8 @@
 
 Because despite their reasoning capabilities, LLMs struggle with arithmetic precision—even basic math can lead to errors.
 
+![Eval improvements graph](./readme_imgs/relative_eval_results.png)
+
 ---
 
 ## 📚 Table of Contents
