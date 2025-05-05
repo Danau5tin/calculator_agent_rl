@@ -163,7 +163,27 @@ A custom benchmark suite built using the `agentic_environments` [library](https:
 | 0.5B       | 0.6%             | **34%**           | +33.4 pts   |
 | 3B         | 27%              | **89%**           | +62 pts     |
 
-![Model eval graphs](./readme_imgs/model_eval_perf.png)
+![Eval performance graph inclusing Qwen 3](./readme_imgs/eval_results_with_qwen3.png)
+
+At the prompt of [this Reddit comment](https://www.reddit.com/r/LocalLLaMA/comments/1kdqcjk/comment/mqd8b6p/) and out of curiosity, I ran the evals against the newer Qwen3 models, which were released 7 months after Qwen 2.5.
+
+Looking at the data, we can see that Qwen3 naturally achieves strong performance without RL. 
+
+We could expect that an RL-trained 1.7B Qwen3 would outperform an RL trained 3B Qwen2.5, a model almost double its size!
+
+
+### Qwen Model Performance Comparison
+
+| Model Family | Model Size | Accuracy | Notes |
+|--------------|------------|----------|-------|
+| **Qwen2.5** (Base) | 0.5B | 0.6% | Pre-RL baseline |
+| **Qwen2.5** (RL-trained) | 0.5B | **34.2%** | +5,300% relative improvement |
+| **Qwen2.5** (Base) | 3B | 27.8% | Pre-RL baseline |
+| **Qwen2.5** (RL-trained) | 3B | **89.9%** | +223% relative improvement |
+| **Qwen3** | 0.6B | 7.6% | 12× better than Qwen2.5 0.5B base |
+| **Qwen3** | 1.7B | 42.4% | Better than RL-trained Qwen2.5 0.5B |
+| **Qwen3** | 4B | 82.3% | Nearly matches RL-trained Qwen2.5 3B |
+
 
 ---
 
